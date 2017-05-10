@@ -1,5 +1,5 @@
 function setup() {
-    createCanvas(20, 15);
+    createCanvas(600, 400);
 }
 
 let xv = 0;
@@ -9,6 +9,9 @@ let y = 0;
 let velocity = 1;
 let maxv = 3;
 let friction = 0.3;
+let px, py;
+let px2, py2;
+let circleSize = 35;
 
 let players;
 
@@ -65,8 +68,16 @@ function draw() {
     if (keyIsDown(DOWN_ARROW))
         yv += velocity;
     physics();
+    noStroke();
     fill(255);
-    ellipse(x, y, 20, 20);
+    ellipse(x, y, circleSize);
+    fill(255, 255, 255, 80);
+    ellipse(px, py, circleSize);
+    ellipse(px2, py2, circleSize);
+    px2 = px;
+    py2 = py;
+    px = x;
+    py = y;
 
     if (logedin) {
         database.ref('Users/' + uid).set({

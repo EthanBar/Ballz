@@ -1,9 +1,9 @@
 var config = {
     apiKey: "AIzaSyAD6rxrGfFQmImBrP2JnxCRE3l5k8SjpNA",
-    authDomain: "bounce-72a28.firebaseapp.com",
-    databaseURL: "https://bounce-72a28.firebaseio.com",
-    projectId: "bounce-72a28",
-    storageBucket: "bounce-72a28.appspot.com",
+    authDomain: "Ballz-72a28.firebaseapp.com",
+    databaseURL: "https://Ballz-72a28.firebaseio.com",
+    projectId: "Ballz-72a28",
+    storageBucket: "Ballz-72a28.appspot.com",
     messagingSenderId: "69347143131"
 };
 firebase.initializeApp(config);
@@ -34,6 +34,8 @@ firebase.auth().onAuthStateChanged(function(user) {
         commentsRef.on('value', function(data) {
             players = data.val();
         });
+        let disconnect = database.ref("Users/" + uid);
+        disconnect.onDisconnect().remove();
         logedin = true;
     } else {
         $(".login").text("Sign in");
@@ -75,6 +77,7 @@ function init() {
     // auth.onAuthStateChanged(authChange());
 }
 function logout() {
+    database.ref("Users/" + uid).remove();
     firebase.auth().signOut().then(function() {
         user = null;
     }, function(error) {
