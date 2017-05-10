@@ -6,7 +6,7 @@ let xv = 0;
 let yv = 0;
 let x = 0;
 let y = 0;
-let velocity = 1;
+let velocity = 2;
 let maxv = 3;
 let friction = 0.3;
 let px, py;
