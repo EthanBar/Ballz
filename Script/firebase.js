@@ -1,9 +1,9 @@
-var config = {
+const config = {
     apiKey: "AIzaSyAD6rxrGfFQmImBrP2JnxCRE3l5k8SjpNA",
-    authDomain: "Ballz-72a28.firebaseapp.com",
-    databaseURL: "https://Ballz-72a28.firebaseio.com",
-    projectId: "Ballz-72a28",
-    storageBucket: "Ballz-72a28.appspot.com",
+    authDomain: "bounce-72a28.firebaseapp.com",
+    databaseURL: "https://bounce-72a28.firebaseio.com",
+    projectId: "bounce-72a28",
+    storageBucket: "bounce-72a28.appspot.com",
     messagingSenderId: "69347143131"
 };
 firebase.initializeApp(config);

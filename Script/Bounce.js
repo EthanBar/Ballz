@@ -56,6 +56,8 @@ function physics() {
 
 function draw() {
     background(0);
+    fill(255);
+    noStroke();
     if (keyIsDown(LEFT_ARROW))
         xv -= velocity;
 
@@ -68,17 +70,6 @@ function draw() {
     if (keyIsDown(DOWN_ARROW))
         yv += velocity;
     physics();
-    noStroke();
-    fill(255);
-    ellipse(x, y, circleSize);
-    fill(255, 255, 255, 80);
-    ellipse(px, py, circleSize);
-    ellipse(px2, py2, circleSize);
-    px2 = px;
-    py2 = py;
-    px = x;
-    py = y;
-
     if (logedin) {
         database.ref('Users/' + uid).set({
             display: username,
@@ -89,8 +80,16 @@ function draw() {
             for (let key in players) {
                 if (!players.hasOwnProperty(key)) continue;
                 let player = players[key];
-                ellipse(player["x"], player["y"], 20, 20);
+                ellipse(player["x"], player["y"], circleSize);
             }
         }
     }
+    ellipse(x, y, circleSize);
+    fill(255, 255, 255, 80);
+    ellipse(px, py, circleSize);
+    ellipse(px2, py2, circleSize);
+    px2 = px;
+    py2 = py;
+    px = x;
+    py = y;
 }
