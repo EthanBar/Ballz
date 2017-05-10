@@ -1,0 +1,59 @@
+* {
+    padding: 0;
+    margin: 0;
+    font-family: 'Roboto', sans-serif;
+}
+
+.username {
+    font-size: 20px;
+    display: inline-block;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    left: 80px;
+    color: white;
+}
+
+.userpic {
+    display: inline-block;
+    position: absolute;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 50px;
+}
+
+.user {
+    position: relative;
+    background-color: #0288d1;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    padding: 40px;
+}
+
+.login {
+    display: inline-block;
+    position: absolute;
+    right: 20px;
+    font-size: 20px;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    padding: 5px;
+    border-radius: 0;
+    border-style: none;
+    color: white;
+    background-color: #0288d1;
+}
+
+.login:hover {
+    background-color: #029af0;
+    box-shadow: 0 2px 3px 0 rgba(0, 0, 0, 0.1), 0 2px 5px 0 rgba(0, 0, 0, 0.1);
+}
+
+canvas {
+    /*display: inline;*/
+    position: absolute;
+    top:0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin:auto;
+}
