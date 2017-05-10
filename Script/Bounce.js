@@ -66,7 +66,7 @@ function draw() {
         yv += velocity;
     physics();
     fill(255);
-    ellipse(x, y, 2000, 2000);
+    ellipse(x, y, 20, 20);
 
     if (logedin) {
         database.ref('Users/' + uid).set({
