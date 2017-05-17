@@ -13,7 +13,7 @@ let maxv = 3;
 let friction = 1;
 let px, py;
 let px2, py2;
-let circleSize = 35;
+let circleSize = 30;
 
 let players;
 
@@ -83,13 +83,15 @@ function draw() {
             for (let key in players) {
                 if (!players.hasOwnProperty(key)) continue;
                 let player = players[key];
+                let othername = player["display"];
+                if (othername == username) continue;
                 let multiX = player["x"];
                 let multiY = player["y"];
                 let multiSize = player["size"];
-
+                console.log(multiX);
                 ellipse(multiX, multiY, multiSize);
-
-                if ((x > multiX - 15 && x < multiX - 15) && (y > multiY - 15 && y < multiY - 15)) {
+                console.log(x > multiX - 15);
+                if ((x > multiX - 15 && x < multiX + 15) && (y > multiY - 15 && y < multiY + 15)) {
                     if (circleSize > multiSize) {
                         circleSize += multiSize;
                     } if (circleSize < multiSize) {
