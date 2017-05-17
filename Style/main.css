@@ -8,21 +8,23 @@
     font-size: 20px;
     display: inline-block;
     position: absolute;
+    text-align: right;
     top: 50%;
     transform: translateY(-50%);
-    left: 80px;
+    right: 90px;
     color: white;
 }
 
 .userpic {
     display: inline-block;
     position: absolute;
+    right: 0;
     top: 50%;
     transform: translate(-50%, -50%);
     border-radius: 50px;
 }
 
-.user {
+.topbar {
     position: relative;
     background-color: #0288d1;
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
@@ -32,7 +34,7 @@
 .login {
     display: inline-block;
     position: absolute;
-    right: 20px;
+    left: 60px;
     font-size: 20px;
     top: 50%;
     transform: translate(-50%, -50%);
@@ -44,8 +46,14 @@
 }
 
 .login:hover {
-    background-color: #029af0;
+    animation: shadowhover 1s;
     box-shadow: 0 2px 3px 0 rgba(0, 0, 0, 0.1), 0 2px 5px 0 rgba(0, 0, 0, 0.1);
+    background-color: #029af0;
+}
+
+@keyframes shadowhover {
+    from { box-shadow: 0 0px 0px 0 rgba(0, 0, 0, 0.1), 0 0px 0px 0 rgba(0, 0, 0, 0.1); background-color: #0288d1;}
+    to { box-shadow: 0 2px 3px 0 rgba(0, 0, 0, 0.1), 0 2px 5px 0 rgba(0, 0, 0, 0.1); background-color: #029af0;}
 }
 
 canvas {

@@ -1,3 +1,5 @@
+"use strict";
+
 const config = {
     apiKey: "AIzaSyAD6rxrGfFQmImBrP2JnxCRE3l5k8SjpNA",
     authDomain: "bounce-72a28.firebaseapp.com",

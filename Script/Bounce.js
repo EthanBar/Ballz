@@ -1,3 +1,5 @@
+"use strict";
+
 function setup() {
     createCanvas(600, 400);
 }
@@ -8,7 +10,7 @@ let x = 0;
 let y = 0;
 let velocity = 2;
 let maxv = 3;
-let friction = 0.3;
+let friction = 1;
 let px, py;
 let px2, py2;
 let circleSize = 35;
@@ -74,16 +76,34 @@ function draw() {
         database.ref('Users/' + uid).set({
             display: username,
             x: x,
-            y: y
+            y: y,
+            size: circleSize
         });
         if (players) {
             for (let key in players) {
                 if (!players.hasOwnProperty(key)) continue;
                 let player = players[key];
-                ellipse(player["x"], player["y"], circleSize);
+                let multiX = player["x"];
+                let multiY = player["y"];
+                let multiSize = player["size"];
+
+                ellipse(multiX, multiY, multiSize);
+
+                if ((x > multiX - 15 && x < multiX - 15) && (y > multiY - 15 && y < multiY - 15)) {
+                    if (circleSize > multiSize) {
+                        circleSize += multiSize;
+                    } if (circleSize < multiSize) {
+                        circleSize = 10;
+                        x = 0;
+                        y = 0;
+                    }
+                }
+
             }
         }
     }
+
+
     ellipse(x, y, circleSize);
     fill(255, 255, 255, 80);
     ellipse(px, py, circleSize);
