@@ -101,8 +101,9 @@ function draw() {
                 console.log(multiX);
                 fill(0);
                 ellipse(multiX, multiY, multiSize);
-                fill(255, 255, 255, 150);
-                text(othername.substr(0, othername.indexOf(' ')), multiX, multiY + 5);
+                textSize(30);
+                fill(0, 0, 0, 150);
+                text(othername.substr(0, othername.indexOf(' ')), multiX, multiY - (multiSize/2) - 10);
                 console.log(x > multiX - 15);
                 if ((x > multiX - multiSize/2 && x < multiX + multiSize/2) && (y > multiY - multiSize/2 && y < multiY + multiSize/2)) {
                     if (circleSize > multiSize && !(othername in recentlyEaten)) {
