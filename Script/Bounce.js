@@ -99,15 +99,15 @@ function draw() {
                 let multiY = player["y"];
                 let multiSize = player["size"];
                 console.log(multiX);
+                fill(0);
                 ellipse(multiX, multiY, multiSize);
-                fill(0, 0, 0, 150);
-                text(othername.substr(0, othername.indexOf(' ')), multiX, multiY + 20);
-                fill(255);
+                fill(255, 255, 255, 150);
+                text(othername.substr(0, othername.indexOf(' ')), multiX, multiY + 5);
                 console.log(x > multiX - 15);
                 if ((x > multiX - multiSize/2 && x < multiX + multiSize/2) && (y > multiY - multiSize/2 && y < multiY + multiSize/2)) {
                     if (circleSize > multiSize && !(othername in recentlyEaten)) {
                         circleSize += multiSize;
-                        recentlyEaten[othername] = 30;
+                        recentlyEaten[othername] = 30   ;
                     }
                     if (circleSize < multiSize) {
                         circleSize = 10;
@@ -126,7 +126,7 @@ function draw() {
         }
             recentlyEaten[key] -= 1;
     }
-    fill(255);
+    fill(0, 0, 0, 255);
     ellipse(x, y, circleSize);
     fill(0, 0, 0, 80);
     ellipse(px, py, circleSize);
