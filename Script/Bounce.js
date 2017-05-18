@@ -60,8 +60,8 @@ function physics() {
 }
 
 function draw() {
-    background(0);
-    fill(255);
+    background(255);
+    fill(0);
     noStroke();
     if (keyIsDown(LEFT_ARROW))
         xv -= velocity;
@@ -110,7 +110,7 @@ function draw() {
 
 
     ellipse(x, y, circleSize);
-    fill(255, 255, 255, 80);
+    fill(0, 0, 0, 80);
     ellipse(px, py, circleSize);
     ellipse(px2, py2, circleSize);
     px2 = px;
