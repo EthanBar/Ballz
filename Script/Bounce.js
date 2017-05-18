@@ -1,7 +1,10 @@
 "use strict";
 
+const width = 1000;
+const height = 600;
+
 function setup() {
-    createCanvas(600, 400);
+    createCanvas(width, height);
 }
 
 let xv = 0;
@@ -13,7 +16,7 @@ let maxv = 3;
 let friction = 1;
 let px, py;
 let px2, py2;
-let circleSize = 30;
+let circleSize = Math.random() * 10;
 
 let players;
 
@@ -96,8 +99,8 @@ function draw() {
                         circleSize += multiSize;
                     } if (circleSize < multiSize) {
                         circleSize = 10;
-                        x = 0;
-                        y = 0;
+                        x = Math.random() * width;
+                        y = Math.random() * height;
                     }
                 }
 
