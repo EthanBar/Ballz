@@ -5,7 +5,12 @@ const height = 600;
 
 function setup() {
     createCanvas(width, height);
+    textAlign(CENTER);
 }
+
+Array.prototype.contains = function(element){
+    return this.indexOf(element) > -1;
+};
 
 let xv = 0;
 let yv = 0;
@@ -19,6 +24,7 @@ let px2, py2;
 let circleSize = Math.random() * 10;
 
 let players;
+let recentlyEaten = {};
 
 function physics() {
     if (xv > 0) {
@@ -59,6 +65,7 @@ function physics() {
     y += yv;
 }
 
+
 function draw() {
     background(255);
     fill(0);
@@ -93,10 +100,14 @@ function draw() {
                 let multiSize = player["size"];
                 console.log(multiX);
                 ellipse(multiX, multiY, multiSize);
+                fill(0, 0, 0, 150);
+                text(othername.substr(0, othername.indexOf(' ')), multiX, multiY + 20);
+                fill(255);
                 console.log(x > multiX - 15);
-                if ((x > multiX - 15 && x < multiX + 15) && (y > multiY - 15 && y < multiY + 15)) {
+                if ((x > multiX - 15 && x < multiX + 15) && (y > multiY - 15 && y < multiY + 15) && othername in recentlyEaten) {
                     if (circleSize > multiSize) {
                         circleSize += multiSize;
+                        recentlyEaten[othername] = 30;
                     } if (circleSize < multiSize) {
                         circleSize = 10;
                         x = Math.random() * width;
@@ -107,8 +118,14 @@ function draw() {
             }
         }
     }
-
-
+    for (let key in recentlyEaten) {
+        if (recentlyEaten[key] < 0) {
+            delete recentlyEaten[key];
+            continue;
+        }
+            recentlyEaten[key] -= 1;
+    }
+    fill(255);
     ellipse(x, y, circleSize);
     fill(0, 0, 0, 80);
     ellipse(px, py, circleSize);
