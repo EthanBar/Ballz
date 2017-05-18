@@ -104,11 +104,12 @@ function draw() {
                 text(othername.substr(0, othername.indexOf(' ')), multiX, multiY + 20);
                 fill(255);
                 console.log(x > multiX - 15);
-                if ((x > multiX - 15 && x < multiX + 15) && (y > multiY - 15 && y < multiY + 15) && othername in recentlyEaten) {
-                    if (circleSize > multiSize) {
+                if ((x > multiX - multiSize/2 && x < multiX + multiSize/2) && (y > multiY - multiSize/2 && y < multiY + multiSize/2)) {
+                    if (circleSize > multiSize && !(othername in recentlyEaten)) {
                         circleSize += multiSize;
                         recentlyEaten[othername] = 30;
-                    } if (circleSize < multiSize) {
+                    }
+                    if (circleSize < multiSize) {
                         circleSize = 10;
                         x = Math.random() * width;
                         y = Math.random() * height;
