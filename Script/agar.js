@@ -91,12 +91,13 @@ function draw() {
                 let other = players[key];
                 let otherUID = other["uid"];
                 let otherR = other["size"];
+                let otherAdd = other["toAdd"];
                 if (otherUID == undefined) continue;
                 if (otherUID == uid) {
-                    // if (other["toAdd" != undefined]) {
-                    //     circleSize
-                    // }
-                    player.r = otherR;
+                    if (other[otherAdd != undefined]) {
+                        player.r = sqrt(((PI * player.r * player.r) + (PI * otherAdd * otherAdd)) / PI);
+                    }
+                    database.ref('Users/' + uid).child("toAdd").remove();
                     continue;
                 }
                 if (!(otherUID in colorMap)) {
