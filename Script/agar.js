@@ -42,7 +42,10 @@ function draw() {
     }
     background(100);
     fill(0);
+    textAlign(LEFT);
     text("Score: " + Math.floor(player.r), 10, 30);
+    textAlign(RIGHT);
+    text("alpha v1.0", width, 30);
 
     // translate(width/2-player.pos.x, height/2-player.pos.y);
     translate(width/2, height/2);
