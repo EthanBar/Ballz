@@ -45,7 +45,7 @@ function draw() {
     textAlign(LEFT);
     text("Score: " + Math.floor(player.r), 10, 30);
     textAlign(RIGHT);
-    text("alpha v1.2.1", width, 30);
+    text("alpha v1.3", width, 30);
 
     // translate(width/2-player.pos.x, height/2-player.pos.y);
     translate(width/2, height/2);
