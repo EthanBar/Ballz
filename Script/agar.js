@@ -13,7 +13,7 @@ const startingSize = 64;
 const blobCount = 300;
 
 function setup() {
-    createCanvas(1200, 600);
+    createCanvas(window.innerWidth,  window.innerHeight - document.getElementById('topbar').offsetHeight * 2);
     colorMode(HSB, 100);
     mycolor = random(100);
     player = new Blob(random(-worldBoard, worldBoard), random(-worldBoard, worldBoard), startingSize);
@@ -46,7 +46,7 @@ function draw() {
     textAlign(LEFT);
     text("Score: " + Math.floor(player.r), 10, 30);
     textAlign(RIGHT);
-    text("alpha v1.3.2", width, 30);
+    text("alpha v1.4", width, 30);
 
     // translate(width/2-player.pos.x, height/2-player.pos.y);
     translate(width/2, height/2);
