@@ -6,6 +6,7 @@ let prepareFirebase = false;
 
 let players;
 let colorMap = {};
+let recentlyEaten = {};
 
 const worldBoard = 4000;
 const startingSize = 64;
@@ -96,7 +97,6 @@ function draw() {
                 if (!(otherUID in colorMap)) {
                     colorMap[otherUID] = random(100);
                 }
-                let multiName = other["display"];
                 let otherX = other["x"];
                 let otherY = other["y"];
                 fill(colorMap[otherUID], 100, 100);
@@ -105,7 +105,8 @@ function draw() {
                 // if (false) {
                     let d = p5.Vector.dist(player.pos, createVector(otherX, otherY));
                     console.log(d);
-                    if (Math.abs(d) < player.r + otherR) {
+                    if (Math.abs(d) < player.r + otherR && !(otherUID in recentlyEaten)) {
+                        recentlyEaten[otherUID] = 30;
                         let sum = (PI * player.r * player.r) + (PI * otherR * otherR);
                         database.ref('Users/' + otherUID).update({
                             size: sum
@@ -117,5 +118,11 @@ function draw() {
             }
         }
     }
-
+    for (let key in recentlyEaten) {
+        if (recentlyEaten[key] < 0) {
+            delete recentlyEaten[key];
+            continue;
+        }
+        recentlyEaten[key] -= 1;
+    }
 }
