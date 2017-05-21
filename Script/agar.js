@@ -22,8 +22,6 @@ function setup() {
     }
     strokeCap(SQUARE);
     stroke(0);
-    textAlign(LEFT);
-    textSize(32);
 }
 function draw() {
     if (!prepareFirebase && logedin) {
@@ -43,6 +41,7 @@ function draw() {
     }
     background(100);
     fill(0);
+    textSize(32);
     textAlign(LEFT);
     text("Score: " + Math.floor(player.r), 10, 30);
     textAlign(RIGHT);
@@ -89,12 +88,18 @@ function draw() {
         });
         if (players) {
             for (let key in players) {
+                // Get values of other player
                 let other = players[key];
                 let otherUID = other["uid"];
                 let otherR = other["size"];
+                let otherDisplay = other["display"];
                 let amKilled = other["killed"];
+                let otherX = other["x"];
+                let otherY = other["y"];
                 if (otherUID == undefined) continue;
+                // Check if self
                 if (otherUID == uid) {
+                    // Check if dead
                     if (amKilled === 1) {
                         player.r = startingSize;
                         player.pos = createVector(random(-worldBoard, worldBoard), random(-worldBoard, worldBoard));
@@ -104,13 +109,20 @@ function draw() {
                     }
                     continue;
                 }
+                // Display other player ellipse
                 if (!(otherUID in colorMap)) {
                     colorMap[otherUID] = random(100);
                 }
-                let otherX = other["x"];
-                let otherY = other["y"];
                 fill(colorMap[otherUID], 100, 100);
                 ellipse(otherX, otherY, otherR * 2);
+
+                // Display hover text
+                textSize(otherR / 2);
+                fill(0);
+                textAlign(CENTER);
+                text(otherDisplay.substr(0, otherDisplay.indexOf(" ")), otherX, otherY);
+
+                // Check collision
                 if (player.r > otherR) {
                 // if (false) {
                     let d = p5.Vector.dist(player.pos, createVector(otherX, otherY));
