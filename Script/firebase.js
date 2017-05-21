@@ -32,10 +32,6 @@ firebase.auth().onAuthStateChanged(function(user) {
         $(".username").text(username);
         $(".userpic").attr("src", photoUrl);
         $(".login").text("Sign out");
-        let commentsRef = firebase.database().ref('Users');
-        commentsRef.on('value', function(data) {
-            players = data.val();
-        });
         let disconnect = database.ref("Users/" + uid);
         disconnect.onDisconnect().remove();
         logedin = true;

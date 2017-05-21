@@ -5,7 +5,11 @@ function Blob(x, y, r) {
 
     this.update = function() {
         let newvel = createVector(mouseX - width/2, mouseY - height/2);
-        newvel.setMag(Math.max(15 - this.r * 0.01, 5));
+        if (newvel.mag() < 10) {
+            newvel.setMag(0);
+        } else {
+            newvel.setMag(Math.max(15 - this.r * 0.01, 5));
+        }
         this.vel.lerp(newvel, 0.2);
         this.pos.add(this.vel);
     };

@@ -100,7 +100,7 @@ function draw() {
                 let player = players[key];
                 let multiUid = player["uid"];
                 let multiSize = player["size"];
-                if (multiUid == uid) {
+                if (String(multiUid) === String(uid)) {
                     circleSize = multiSize;
                 }
                 let multiName = player["display"];
