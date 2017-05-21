@@ -26,7 +26,7 @@ function setup() {
 }
 function draw() {
     if (!prepareFirebase && logedin) {
-        database.ref('Users/' + uid).set({
+        database.ref('Users/' + uid).update({
             display: username,
             uid: uid,
             x: Math.round(player.pos.x),
@@ -86,7 +86,9 @@ function draw() {
             for (let key in players) {
                 let other = players[key];
                 let otherUID = other["uid"];
+                console.log(otherUID);
                 let otherR = other["size"];
+                if (otherUID == undefined) continue;
                 if (otherUID == uid) {
                     circleSize = otherR;
                     continue;
@@ -105,7 +107,6 @@ function draw() {
                     console.log(d);
                     if (Math.abs(d) < player.r + otherR) {
                         let sum = (PI * player.r * player.r) + (PI * otherR * otherR);
-                        console.log(sum);
                         database.ref('Users/' + otherUID).update({
                             size: sum
                         });
