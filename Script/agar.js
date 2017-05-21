@@ -32,7 +32,8 @@ function draw() {
             uid: uid,
             x: Math.round(player.pos.x),
             y: Math.round(player.pos.y),
-            size: Math.round(player.r)
+            size: Math.round(player.r),
+            killed: 0
         });
         let commentsRef = firebase.database().ref('Users');
         commentsRef.on('value', function(data) {
@@ -45,7 +46,7 @@ function draw() {
     textAlign(LEFT);
     text("Score: " + Math.floor(player.r), 10, 30);
     textAlign(RIGHT);
-    text("alpha v1.3.1", width, 30);
+    text("alpha v1.3.2", width, 30);
 
     // translate(width/2-player.pos.x, height/2-player.pos.y);
     translate(width/2, height/2);
@@ -91,13 +92,16 @@ function draw() {
                 let other = players[key];
                 let otherUID = other["uid"];
                 let otherR = other["size"];
-                let otherAdd = other["toAdd"];
+                let amKilled = other["killed"];
                 if (otherUID == undefined) continue;
                 if (otherUID == uid) {
-                    if (other[otherAdd != undefined]) {
-                        player.r = sqrt(((PI * player.r * player.r) + (PI * otherAdd * otherAdd)) / PI);
+                    if (amKilled === 1) {
+                        player.r = startingSize;
+                        player.pos = createVector(random(-worldBoard, worldBoard), random(-worldBoard, worldBoard));
+                        database.ref('Users/' + uid).update({
+                            killed: 0
+                        });
                     }
-                    database.ref('Users/' + uid).child("toAdd").remove();
                     continue;
                 }
                 if (!(otherUID in colorMap)) {
@@ -107,18 +111,17 @@ function draw() {
                 let otherY = other["y"];
                 fill(colorMap[otherUID], 100, 100);
                 ellipse(otherX, otherY, otherR * 2);
-                if (player.r < otherR) {
+                if (player.r > otherR) {
                 // if (false) {
                     let d = p5.Vector.dist(player.pos, createVector(otherX, otherY));
                     if (Math.abs(d) < player.r + otherR && !(otherUID in recentlyEaten)) {
                         recentlyEaten[otherUID] = 30;
-                        let sum = sqrt(((PI * player.r * player.r) + (PI * otherR * otherR)) / PI);
-                        console.log(sum);
                         database.ref('Users/' + otherUID).update({
-                            toAdd: player.r
+                            killed: 1
                         });
-                        player.r = startingSize;
-                        player.pos = createVector(random(-worldBoard, worldBoard), random(-worldBoard, worldBoard));
+                        let sum = (sqrt(((PI * player.r * player.r) + (PI * otherR * otherR)) / PI));
+                        console.log(sum);
+                        player.r = sum;
                     }
                 }
             }
