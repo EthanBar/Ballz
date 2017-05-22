@@ -13,7 +13,7 @@ const startingSize = 64;
 const blobCount = 300;
 
 function setup() {
-    createCanvas(window.innerWidth,  window.innerHeight - document.getElementById('topbar').offsetHeight * 2);
+    createCanvas(window.innerWidth,  window.innerHeight - document.getElementById('topbar').offsetHeight);
     colorMode(HSB, 100);
     mycolor = random(100);
     player = new Blob(random(-worldBoard, worldBoard), random(-worldBoard, worldBoard), startingSize);
@@ -120,7 +120,7 @@ function draw() {
                 textSize(otherR / 2);
                 fill(0);
                 textAlign(CENTER);
-                text(otherDisplay.substr(0, otherDisplay.indexOf(" ")), otherX, otherY);
+                text(otherDisplay.substr(0, otherDisplay.indexOf(" ")), otherX, otherY + otherR / 4);
 
                 // Check collision
                 if (player.r > otherR) {
