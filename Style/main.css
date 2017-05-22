@@ -52,7 +52,7 @@
 }
 
 @keyframes shadowhover {
-    from { box-shadow: 0 0px 0px 0 rgba(0, 0, 0, 0.1), 0 0px 0px 0 rgba(0, 0, 0, 0.1); background-color: #0288d1;}
+    from { box-shadow: 0 0 0 0 rgba(0, 0, 0, 0.1), 0 0 0 0 rgba(0, 0, 0, 0.1); background-color: #0288d1;}
     to { box-shadow: 0 2px 3px 0 rgba(0, 0, 0, 0.1), 0 2px 5px 0 rgba(0, 0, 0, 0.1); background-color: #029af0;}
 }
 
@@ -63,5 +63,5 @@ canvas {
     bottom: 0;
     left: 0;
     right: 0;
-    margin: auto auto 10px;
+    margin: auto auto 0;
 }

@@ -1,29 +1,36 @@
 let player;
-let blobs = [];
-let zoom = 1;
+let zoom = 10;
 let mycolor;
 let prepareFirebase = false;
-
 let players;
+
+let blobs = [];
 let colorMap = {};
 let recentlyEaten = {};
 
-const worldBoard = 4000;
-const startingSize = 64;
-const blobCount = 300;
+let averageFPS = 0;
+let countFPS = 0;
+
+const blobCount = 2000; // Count of pellets to pick up (These are locally rendered and created)
+const worldSize = 12000; // World size
+const blobSize = 30; // Count of pellets to pick up (These are locally rendered and created)
+const startingSize = 64; // Starting size of the player
+const worldBorder = worldSize + blobSize / 2; // World border
+const zoomScale = startingSize * 0.5;
 
 function setup() {
     createCanvas(window.innerWidth,  window.innerHeight - document.getElementById('topbar').offsetHeight);
     colorMode(HSB, 100);
     mycolor = random(100);
-    player = new Blob(random(-worldBoard, worldBoard), random(-worldBoard, worldBoard), startingSize);
+    player = new Blob(random(-worldSize, worldSize), random(-worldSize, worldSize), startingSize);
     for (let i = 0; i < blobCount; i++) {
-        blobs[i] = new Blob(random(-worldBoard, worldBoard), random(-worldBoard, worldBoard), 30);
+        blobs[i] = new Blob(random(-worldSize, worldSize), random(-worldSize, worldSize), blobSize);
     }
     strokeCap(SQUARE);
     stroke(0);
 }
 function draw() {
+    if (!logedin) return;
     if (!prepareFirebase && logedin) {
         database.ref('Users/' + uid).update({
             display: username,
@@ -39,28 +46,37 @@ function draw() {
         });
         prepareFirebase = true;
     }
+
+
+    /* Render HUD */
     background(100);
     fill(0);
     textSize(32);
     textAlign(LEFT);
     text("Score: " + Math.floor(player.r), 10, 30);
     textAlign(RIGHT);
-    text("alpha v1.4", width, 30);
+    text("beta v1.5", width, 30);
 
-    // translate(width/2-player.pos.x, height/2-player.pos.y);
-    translate(width/2, height/2);
-
-    let newzoom = 32 / player.r;
+    // Display FPS
+    countFPS += frameRate();
+    if (frameCount % 60 === 0){
+        averageFPS = countFPS / 60;
+        countFPS = 0;
+    }
+    text("FPS: " + Math.round(averageFPS), width - 5, height - 5);
+    // Prepare view
+    translate(width/2, height/2); // Center view
+    let newzoom = zoomScale / player.r;
     zoom = lerp(zoom, newzoom, 0.1);
     scale(zoom);
-
     translate(-player.pos.x, -player.pos.y);
 
+    // Draw world boarder lines
     strokeWeight(10);
-    line(-worldBoard, -worldBoard, -worldBoard, worldBoard);
-    line(-worldBoard, worldBoard, worldBoard, worldBoard);
-    line(worldBoard, worldBoard, worldBoard, -worldBoard);
-    line(worldBoard, -worldBoard, -worldBoard, -worldBoard);
+    line(-worldBorder, -worldBorder, -worldBorder, worldBorder);
+    line(-worldBorder, worldBorder, worldBorder, worldBorder);
+    line(worldBorder, worldBorder, worldBorder, -worldBorder);
+    line(worldBorder, -worldBorder, -worldBorder, -worldBorder);
     strokeWeight(0);
 
     let viewDistance = zoom * width * 10;
@@ -74,7 +90,7 @@ function draw() {
     for (let i = blobs.length - 1; i >= 0; i--) {
         if (player.eats(blobs[i])) {
             blobs.splice(i, 1);
-            blobs[blobs.length] = new Blob(random(-worldBoard, worldBoard), random(-worldBoard, worldBoard), 30)
+            blobs[blobs.length] = new Blob(random(-worldSize, worldSize), random(-worldSize, worldSize), blobSize)
         } else {
             blobs[i].render();
         }
@@ -102,7 +118,7 @@ function draw() {
                     // Check if dead
                     if (amKilled === 1) {
                         player.r = startingSize;
-                        player.pos = createVector(random(-worldBoard, worldBoard), random(-worldBoard, worldBoard));
+                        player.pos = createVector(random(-worldSize, worldSize), random(-worldSize, worldSize));
                         database.ref('Users/' + uid).update({
                             killed: 0
                         });

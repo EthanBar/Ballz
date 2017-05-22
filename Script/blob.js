@@ -5,22 +5,40 @@ function Blob(x, y, r) {
 
     this.update = function() {
         let newvel = createVector(mouseX - width/2, mouseY - height/2);
-        if (newvel.mag() < 10) {
+        if (newvel.mag() < zoomScale) {
             newvel.setMag(0);
         } else {
-            newvel.setMag(Math.max(15 - this.r * 0.01, 5));
+            newvel.setMag(Math.max(15 - player.r * 0.005, 10));
         }
         this.vel.lerp(newvel, 0.2);
+        let addedPos = p5.Vector.add(this.pos, newvel);
+        if (addedPos.y < -worldBorder + this.r) {
+            this.vel.y = 0;
+            this.pos.y = -worldBorder + this.r;
+        }
+        if (addedPos.y > worldBorder - this.r) {
+            this.vel.y = 0;
+            this.pos.y = worldBorder - this.r;
+        }
+        if (addedPos.x < -worldBorder + this.r) {
+            this.vel.x = 0;
+            this.pos.x = -worldBorder + this.r;
+        }
+        if (addedPos.x > worldBorder - this.r) {
+            this.vel.x = 0;
+            this.pos.x = worldBorder - this.r;
+        }
         this.pos.add(this.vel);
     };
 
     this.eats = function (other) {
+        let radiusTotal = this.r + other.r;
+        if (this.pos.x - other.pos.x > radiusTotal) return false;
+        if (this.pos.y - other.pos.y > radiusTotal) return false;
         let d = p5.Vector.dist(this.pos, other.pos);
-        // let d = (this.pos.x - other.pos.x) + (this.pos.y - other.pos.y);
-        if (Math.abs(d) < this.r + other.r) {
+        if (Math.abs(d) < radiusTotal) {
             let sum = (PI * this.r * this.r) + (PI * other.r * other.r);
             this.r = sqrt(sum / PI);
-            // this.r += other.r;
             return true;
         }
         return false;
