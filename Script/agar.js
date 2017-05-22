@@ -3,6 +3,7 @@ let zoom = 10;
 let mycolor;
 let prepareFirebase = false;
 let players;
+let hitBorder = false;
 
 let blobs = [];
 let colorMap = {};
@@ -11,12 +12,13 @@ let recentlyEaten = {};
 let averageFPS = 0;
 let countFPS = 0;
 
+const playerSpeed = 15;
 const blobCount = 2000; // Count of pellets to pick up (These are locally rendered and created)
 const worldSize = 12000; // World size
 const blobSize = 30; // Count of pellets to pick up (These are locally rendered and created)
 const startingSize = 64; // Starting size of the player
 const worldBorder = worldSize + blobSize / 2; // World border
-const zoomScale = startingSize * 0.5;
+const zoomScale = startingSize * 0.6;
 
 function setup() {
     createCanvas(window.innerWidth,  window.innerHeight - document.getElementById('topbar').offsetHeight);
@@ -55,7 +57,7 @@ function draw() {
     textAlign(LEFT);
     text("Score: " + Math.floor(player.r), 10, 30);
     textAlign(RIGHT);
-    text("beta v1.5", width, 30);
+    text("beta v1.6", width, 30);
 
     // Display FPS
     countFPS += frameRate();
@@ -72,6 +74,13 @@ function draw() {
     translate(-player.pos.x, -player.pos.y);
 
     // Draw world boarder lines
+    if (hitBorder) {
+        stroke(0, 100, 100);
+        player.r -= 0.5;
+        hitBorder = false;
+    } else {
+        stroke(0);
+    }
     strokeWeight(10);
     line(-worldBorder, -worldBorder, -worldBorder, worldBorder);
     line(-worldBorder, worldBorder, worldBorder, worldBorder);

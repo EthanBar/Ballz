@@ -8,24 +8,28 @@ function Blob(x, y, r) {
         if (newvel.mag() < zoomScale) {
             newvel.setMag(0);
         } else {
-            newvel.setMag(Math.max(15 - player.r * 0.005, 10));
+            newvel.setMag(Math.max(playerSpeed + 10 - player.r * 0.005, playerSpeed));
         }
         this.vel.lerp(newvel, 0.2);
         let addedPos = p5.Vector.add(this.pos, newvel);
         if (addedPos.y < -worldBorder + this.r) {
             this.vel.y = 0;
+            hitBorder = true;
             this.pos.y = -worldBorder + this.r;
         }
         if (addedPos.y > worldBorder - this.r) {
             this.vel.y = 0;
+            hitBorder = true;
             this.pos.y = worldBorder - this.r;
         }
         if (addedPos.x < -worldBorder + this.r) {
             this.vel.x = 0;
+            hitBorder = true;
             this.pos.x = -worldBorder + this.r;
         }
         if (addedPos.x > worldBorder - this.r) {
             this.vel.x = 0;
+            hitBorder = true;
             this.pos.x = worldBorder - this.r;
         }
         this.pos.add(this.vel);
