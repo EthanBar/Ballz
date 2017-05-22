@@ -8,6 +8,7 @@ let hitBorder = false;
 let blobs = [];
 let colorMap = {};
 let recentlyEaten = {};
+let highScores = {};
 
 let averageFPS = 0;
 let countFPS = 0;
@@ -57,7 +58,18 @@ function draw() {
     textAlign(LEFT);
     text("Score: " + Math.floor(player.r), 10, 30);
     textAlign(RIGHT);
-    text("beta v1.6", width, 30);
+    text("beta v1.7", width, 30);
+
+    //Display leader board
+    highScores[uid] = Math.floor(player.r);
+    let bestPlayer = uid;
+    for (let key in highScores) {
+        if (highScores[key] > highScores[bestPlayer]) {
+            bestPlayer = key;
+        }
+    }
+    textAlign(LEFT);
+    text(highScores[bestPlayer], 10, height - 5);
 
     // Display FPS
     countFPS += frameRate();
@@ -104,6 +116,7 @@ function draw() {
             blobs[i].render();
         }
     }
+    // if (player.r < startingSize) player = startingSize;
 
     if (prepareFirebase) {
         database.ref('Users/' + uid).update({
@@ -140,6 +153,9 @@ function draw() {
                 }
                 fill(colorMap[otherUID], 100, 100);
                 ellipse(otherX, otherY, otherR * 2);
+
+                // Update high scores
+                highScores[otherUID] = Math.floor(otherR);
 
                 // Display hover text
                 textSize(otherR / 2);
