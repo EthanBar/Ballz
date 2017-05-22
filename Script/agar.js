@@ -58,7 +58,7 @@ function draw() {
     textAlign(LEFT);
     text("Score: " + Math.floor(player.r), 10, 30);
     textAlign(RIGHT);
-    text("beta v1.7", width, 30);
+    text("beta v1.8", width, 30);
 
     //Display leader board
     highScores[uid] = Math.floor(player.r);

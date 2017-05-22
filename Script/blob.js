@@ -8,7 +8,7 @@ function Blob(x, y, r) {
         if (newvel.mag() < zoomScale) {
             newvel.setMag(0);
         } else {
-            newvel.setMag(Math.max(playerSpeed * 2 - player.r * 0.005, playerSpeed));
+            newvel.setMag(Math.max(playerSpeed * 2 - player.r * 0.05, playerSpeed));
         }
         this.vel.lerp(newvel, 0.2);
         let addedPos = p5.Vector.add(this.pos, newvel);
