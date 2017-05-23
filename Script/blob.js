@@ -1,6 +1,7 @@
 const NONE = 0;
 const SPEED = 1;
 const ZOOM = 2;
+const MAGNET = 3;
 
 function Blob(x, y, r) {
     this.pos = createVector(x, y);
@@ -15,7 +16,7 @@ function Blob(x, y, r) {
         if (newvel.mag() < zoomScale) {
             newvel.setMag(0);
         } else {
-            newvel.setMag(Math.max(playerSpeed * 2 - player.r * 0.05, playerSpeed) * speedMulti);
+            newvel.setMag(Math.max(playerSpeed * 2 - player.r * 0.03, playerSpeed) * speedMulti);
         }
         this.vel.lerp(newvel, 0.2);
         let addedPos = p5.Vector.add(this.pos, newvel);
@@ -53,6 +54,7 @@ function Blob(x, y, r) {
             this.r = sqrt(sum / PI);
             if (other.powerUp === SPEED) speedCounter = 10;
             if (other.powerUp === ZOOM) zoomCounter = 8;
+            if (other.powerUp === MAGNET) magnetCounter = 50;
             return true;
         }
         return false;
@@ -74,22 +76,17 @@ function Blob(x, y, r) {
 function getColor(x) {
     if (x === ZOOM) {
         fill(33, 100, 100);
+    } else if (x === MAGNET) {
+        fill(72, 100, 100);
     } else {
         fill(66, 100, 100);
     }
 }
 
-function speedUp(x) {
-    return x < 0.05;
-}
-
-function zoomUp(x) {
-    return x < 0.10 && x > 0.05 ;
-}
-
 function getPowerUp() {
     let rnd = Math.random();
     if (rnd > 0.02) return NONE;
+    if (rnd > 0.01) return MAGNET;
     if (rnd > 0.002) return SPEED;
     return ZOOM;
 }

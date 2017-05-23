@@ -5,6 +5,10 @@ let prepareFirebase = false;
 let players;
 let hitBorder = false;
 
+let prevX = 0;
+let prevY = 0;
+let prevR = 0;
+
 let blobs = [];
 let colorMap = {};
 let recentlyEaten = {};
@@ -16,7 +20,7 @@ let countFPS = 0;
 const playerSpeed = 15;
 const blobCount = 2000; // Count of pellets to pick up (These are locally rendered and created)
 const worldSize = 12000; // World size
-const blobSize = 30; // Count of pellets to pick up (These are locally rendered and created)
+const blobSize = 20; // Count of pellets to pick up (These are locally rendered and created)
 const startingSize = 64; // Starting size of the player
 const worldBorder = worldSize + blobSize / 2; // World border
 const zoomScale = startingSize * 0.6;
@@ -26,6 +30,7 @@ const powerUpNumber = 2;
 
 let speedCounter = 0;
 let zoomCounter = 1;
+let magnetCounter = 0;
 
 
 function setup() {
@@ -89,7 +94,7 @@ function draw() {
 
     // Prepare view
     translate(width/2, height/2); // Center view
-    let newzoom = zoomScale / player.r;
+    let newzoom = zoomScale / ((player.r - startingSize) / 2 + startingSize);
     newzoom /= zoomCounter;
     zoom = lerp(zoom, newzoom, 0.1);
     scale(zoom);
@@ -120,6 +125,24 @@ function draw() {
     blobs.sort(compare);
 
     fill(0);
+
+    if (magnetCounter > 0) {
+        for (let i = blobs.length - 1; i >= 0; i--) {
+            // if (player.pos.x - blobs[i].pos.x < player.r + 10) continue;
+            // if (player.pos.y - blobs[i].pos.y < player.r + 10) continue;
+            if (player.pos.x - blobs[i].pos.x > player.r * 2 + 40) continue;
+            if (player.pos.y - blobs[i].pos.y > player.r * 2 + 40) continue;
+            let dist = p5.Vector.dist(player.pos, blobs[i].pos);
+            if (Math.abs(dist) < player.r * 2 + 40) {
+                console.log("yee");
+                let d = createVector(player.pos.x - blobs[i].pos.x, player.pos.y - blobs[i].pos.y);
+                d.setMag(10);
+                blobs[i].pos.add(d);
+            }
+        }
+
+    }
+
     for (let i = blobs.length - 1; i >= 0; i--) {
         if (player.eats(blobs[i])) {
             blobs.splice(i, 1);
@@ -131,11 +154,20 @@ function draw() {
     // if (player.r < startingSize) player = startingSize;
 
     if (prepareFirebase) {
-        database.ref('Users/' + uid).update({
-            x: Math.round(player.pos.x),
-            y: Math.round(player.pos.y),
-            size: Math.round(player.r)
-        });
+        if (prevX !== player.pos.x || prevY !== player.pos.y) {
+            if (prevR === player.r) {
+                database.ref('Users/' + uid).update({
+                    x: Math.round(player.pos.x),
+                    y: Math.round(player.pos.y)
+                });
+            } else {
+                database.ref('Users/' + uid).update({
+                    x: Math.round(player.pos.x),
+                    y: Math.round(player.pos.y),
+                    size: Math.round(player.r)
+                });
+            }
+        }
         if (players) {
             for (let key in players) {
                 // Get values of other player
@@ -146,9 +178,9 @@ function draw() {
                 let amKilled = other["killed"];
                 let otherX = other["x"];
                 let otherY = other["y"];
-                if (otherUID == undefined) continue;
+                if (otherUID === undefined) continue;
                 // Check if self
-                if (otherUID == uid) {
+                if (otherUID === uid) {
                     // Check if dead
                     if (amKilled === 1) {
                         player.r = startingSize;
@@ -199,8 +231,14 @@ function draw() {
         }
         recentlyEaten[key] -= 1;
     }
+
+    // Var updates
     if (zoomCounter > 1) zoomCounter -= 0.1;
     speedCounter -= 0.1;
+    magnetCounter -= 0.1;
+    prevX = player.pos.x;
+    prevY = player.pos.y;
+    prevR = player.r;
 }
 
 function compare(a,b) {
