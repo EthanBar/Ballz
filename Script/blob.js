@@ -2,6 +2,7 @@ const NONE = 0;
 const SPEED = 1;
 const ZOOM = 2;
 const MAGNET = 3;
+const GLITCH = 4;
 
 function Blob(x, y, r) {
     this.pos = createVector(x, y);
@@ -54,7 +55,8 @@ function Blob(x, y, r) {
             this.r = sqrt(sum / PI);
             if (other.powerUp === SPEED) speedCounter = 10;
             if (other.powerUp === ZOOM) zoomCounter = 8;
-            if (other.powerUp === MAGNET) magnetCounter = 50;
+            if (other.powerUp === MAGNET) magnetCounter = 100;
+            if (other.powerUp === MAGNET) glitchCounter = 20;
             return true;
         }
         return false;
@@ -66,6 +68,7 @@ function Blob(x, y, r) {
     };
 
     this.render = function () {
+        if (glitchCounter > 0) fill(Math.random() * 100, 100, 100);
         if (this.powerUp !== NONE) {
             getColor(this.powerUp);
         }
@@ -78,6 +81,8 @@ function getColor(x) {
         fill(33, 100, 100);
     } else if (x === MAGNET) {
         fill(72, 100, 100);
+    } else if (x === GLITCH) {
+        fill(48, 100, 100);
     } else {
         fill(66, 100, 100);
     }
@@ -86,7 +91,8 @@ function getColor(x) {
 function getPowerUp() {
     let rnd = Math.random();
     if (rnd > 0.02) return NONE;
-    if (rnd > 0.01) return MAGNET;
-    if (rnd > 0.002) return SPEED;
+    if (rnd > 0.015) return MAGNET;
+    if (rnd > 0.005) return SPEED;
+    if (rnd > 0.002) return GLITCH;
     return ZOOM;
 }

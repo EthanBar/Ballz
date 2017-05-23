@@ -18,16 +18,16 @@ let averageFPS = 0;
 let countFPS = 0;
 
 const playerSpeed = 15;
+const magnetRange = 40;
+const magnetStrength = 15;
 const blobCount = 2000; // Count of pellets to pick up (These are locally rendered and created)
 const worldSize = 12000; // World size
 const blobSize = 20; // Count of pellets to pick up (These are locally rendered and created)
 const startingSize = 64; // Starting size of the player
 const worldBorder = worldSize + blobSize / 2; // World border
 const zoomScale = startingSize * 0.6;
-const powerUpRate = 0.1;
-const powerUpNumber = 2;
 
-
+let glitchCounter = 0;
 let speedCounter = 0;
 let zoomCounter = 1;
 let magnetCounter = 0;
@@ -70,7 +70,7 @@ function draw() {
     textAlign(LEFT);
     text("Score: " + Math.floor(player.r), 10, 30);
     textAlign(RIGHT);
-    text("v1.9", width, 30);
+    text("v1.10", width, 30);
 
     //Display leader board
     highScores[uid] = Math.floor(player.r);
@@ -130,13 +130,13 @@ function draw() {
         for (let i = blobs.length - 1; i >= 0; i--) {
             // if (player.pos.x - blobs[i].pos.x < player.r + 10) continue;
             // if (player.pos.y - blobs[i].pos.y < player.r + 10) continue;
-            if (player.pos.x - blobs[i].pos.x > player.r * 2 + 40) continue;
-            if (player.pos.y - blobs[i].pos.y > player.r * 2 + 40) continue;
+            if (player.pos.x - blobs[i].pos.x > player.r * 2 + magnetRange) continue;
+            if (player.pos.y - blobs[i].pos.y > player.r * 2 + magnetRange) continue;
             let dist = p5.Vector.dist(player.pos, blobs[i].pos);
-            if (Math.abs(dist) < player.r * 2 + 40) {
+            if (Math.abs(dist) < player.r * 2 + magnetRange) {
                 console.log("yee");
                 let d = createVector(player.pos.x - blobs[i].pos.x, player.pos.y - blobs[i].pos.y);
-                d.setMag(10);
+                d.setMag(magnetStrength);
                 blobs[i].pos.add(d);
             }
         }
@@ -236,6 +236,7 @@ function draw() {
     if (zoomCounter > 1) zoomCounter -= 0.1;
     speedCounter -= 0.1;
     magnetCounter -= 0.1;
+    glitchCounter -= 0.1;
     prevX = player.pos.x;
     prevY = player.pos.y;
     prevR = player.r;
