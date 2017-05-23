@@ -64,13 +64,15 @@ function draw() {
 
 
     /* Render HUD */
-    background(100);
+    if (glitchCounter > 0) {
+        background(Math.random() * 100, 100, 100);
+    } else background(100);
     fill(0);
     textSize(32);
     textAlign(LEFT);
     text("Score: " + Math.floor(player.r), 10, 30);
     textAlign(RIGHT);
-    text("v1.10.1", width, 30);
+    text("v1.420", width, 30);
 
     //Display leader board
     highScores[uid] = Math.floor(player.r);
