@@ -1,14 +1,21 @@
+const NONE = 0;
+const SPEED = 1;
+const ZOOM = 2;
+
 function Blob(x, y, r) {
     this.pos = createVector(x, y);
     this.r = r;
     this.vel = createVector(0, 0);
+    this.powerUp = getPowerUp();
 
     this.update = function() {
         let newvel = createVector(mouseX - width/2, mouseY - height/2);
+        let speedMulti = 1;
+        if (speedCounter > 0) speedMulti = 2;
         if (newvel.mag() < zoomScale) {
             newvel.setMag(0);
         } else {
-            newvel.setMag(Math.max(playerSpeed * 2 - player.r * 0.05, playerSpeed));
+            newvel.setMag(Math.max(playerSpeed * 2 - player.r * 0.05, playerSpeed) * speedMulti);
         }
         this.vel.lerp(newvel, 0.2);
         let addedPos = p5.Vector.add(this.pos, newvel);
@@ -42,7 +49,10 @@ function Blob(x, y, r) {
         let d = p5.Vector.dist(this.pos, other.pos);
         if (Math.abs(d) < radiusTotal) {
             let sum = (PI * this.r * this.r) + (PI * other.r * other.r);
+            // this.r += other.r;
             this.r = sqrt(sum / PI);
+            if (other.powerUp === SPEED) speedCounter = 10;
+            if (other.powerUp === ZOOM) zoomCounter = 8;
             return true;
         }
         return false;
@@ -54,6 +64,32 @@ function Blob(x, y, r) {
     };
 
     this.render = function () {
+        if (this.powerUp !== NONE) {
+            getColor(this.powerUp);
+        }
         ellipse(this.pos.x, this.pos.y, this.r * 2, this.r * 2);
     };
+}
+
+function getColor(x) {
+    if (x === ZOOM) {
+        fill(33, 100, 100);
+    } else {
+        fill(66, 100, 100);
+    }
+}
+
+function speedUp(x) {
+    return x < 0.05;
+}
+
+function zoomUp(x) {
+    return x < 0.10 && x > 0.05 ;
+}
+
+function getPowerUp() {
+    let rnd = Math.random();
+    if (rnd > 0.02) return NONE;
+    if (rnd > 0.002) return SPEED;
+    return ZOOM;
 }

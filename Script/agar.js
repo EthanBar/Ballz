@@ -20,6 +20,13 @@ const blobSize = 30; // Count of pellets to pick up (These are locally rendered 
 const startingSize = 64; // Starting size of the player
 const worldBorder = worldSize + blobSize / 2; // World border
 const zoomScale = startingSize * 0.6;
+const powerUpRate = 0.1;
+const powerUpNumber = 2;
+
+
+let speedCounter = 0;
+let zoomCounter = 1;
+
 
 function setup() {
     createCanvas(window.innerWidth,  window.innerHeight - document.getElementById('topbar').offsetHeight);
@@ -58,7 +65,7 @@ function draw() {
     textAlign(LEFT);
     text("Score: " + Math.floor(player.r), 10, 30);
     textAlign(RIGHT);
-    text("beta v1.8", width, 30);
+    text("v1.9", width, 30);
 
     //Display leader board
     highScores[uid] = Math.floor(player.r);
@@ -77,10 +84,13 @@ function draw() {
         averageFPS = countFPS / 60;
         countFPS = 0;
     }
+    textAlign(RIGHT);
     text("FPS: " + Math.round(averageFPS), width - 5, height - 5);
+
     // Prepare view
     translate(width/2, height/2); // Center view
     let newzoom = zoomScale / player.r;
+    newzoom /= zoomCounter;
     zoom = lerp(zoom, newzoom, 0.1);
     scale(zoom);
     translate(-player.pos.x, -player.pos.y);
@@ -106,6 +116,8 @@ function draw() {
     if (prepareFirebase) {
         player.update(player.r);
     }
+
+    blobs.sort(compare);
 
     fill(0);
     for (let i = blobs.length - 1; i >= 0; i--) {
@@ -187,4 +199,14 @@ function draw() {
         }
         recentlyEaten[key] -= 1;
     }
+    if (zoomCounter > 1) zoomCounter -= 0.1;
+    speedCounter -= 0.1;
+}
+
+function compare(a,b) {
+    if (a.powerUp > b.powerUp)
+        return -1;
+    if (a.powerUp < b.powerUp)
+        return 1;
+    return 0;
 }
