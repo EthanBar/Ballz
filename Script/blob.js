@@ -56,7 +56,7 @@ function Blob(x, y, r) {
             if (other.powerUp === SPEED) speedCounter = 10;
             if (other.powerUp === ZOOM) zoomCounter = 8;
             if (other.powerUp === MAGNET) magnetCounter = 100;
-            if (other.powerUp === GLITCH) glitchCounter = 70;
+            if (other.powerUp === GLITCH) glitchCounter = 20;
             return true;
         }
         return false;

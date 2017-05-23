@@ -72,7 +72,7 @@ function draw() {
     textAlign(LEFT);
     text("Score: " + Math.floor(player.r), 10, 30);
     textAlign(RIGHT);
-    text("v1.420", width, 30);
+    text("v1.840", width, 30);
 
     //Display leader board
     highScores[uid] = Math.floor(player.r);
@@ -98,7 +98,12 @@ function draw() {
     translate(width/2, height/2); // Center view
     let newzoom = zoomScale / ((player.r - startingSize) / 2 + startingSize);
     newzoom /= zoomCounter;
-    zoom = lerp(zoom, newzoom, 0.1);
+    if (glitchCounter > 0) {
+        newzoom *= Math.random() + 0.5;
+        zoom = newzoom;
+    } else {
+        zoom = lerp(zoom, newzoom, 0.1);
+    }
     scale(zoom);
     translate(-player.pos.x, -player.pos.y);
 
