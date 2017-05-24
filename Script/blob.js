@@ -3,6 +3,9 @@ const SPEED = 1;
 const ZOOM = 2;
 const MAGNET = 3;
 const GLITCH = 4;
+const BIG = 5;
+
+let currentPower = NONE;
 
 function Blob(x, y, r) {
     this.pos = createVector(x, y);
@@ -50,27 +53,42 @@ function Blob(x, y, r) {
         if (this.pos.y - other.pos.y > radiusTotal) return false;
         let d = p5.Vector.dist(this.pos, other.pos);
         if (Math.abs(d) < radiusTotal) {
-            let sum = (PI * this.r * this.r) + (PI * other.r * other.r);
             // this.r += other.r;
-            this.r = sqrt(sum / PI);
             if (other.powerUp === SPEED) speedCounter = 10;
             if (other.powerUp === ZOOM) zoomCounter = 8;
             if (other.powerUp === MAGNET) magnetCounter = 100;
-            if (other.powerUp === GLITCH) glitchCounter = 20;
+            if (other.powerUp === GLITCH) glitchCounter = 8;
+            if (other.powerUp === BIG) {
+                let sum = (PI * this.r * this.r) + (PI * other.r * other.r) * 20;
+                this.r = sqrt(sum / PI);
+            } else {
+                let sum = (PI * this.r * this.r) + (PI * other.r * other.r);
+                this.r = sqrt(sum / PI);
+            }
             return true;
         }
         return false;
     };
 
     this.renderPlayer = function () {
+        if (player.r < 0) respawn(); // Respawn if mass less than 0
+
+        // Display player
         fill(mycolor, 100, 100);
         ellipse(this.pos.x, this.pos.y, this.r * 2, this.r * 2);
+
+        // Display hover text
+        textSize(this.r / 2);
+        fill(0);
+        textAlign(CENTER, CENTER);
+        text(username.substr(0, username.indexOf(" ")), this.pos.x, this.pos.y);
     };
 
     this.render = function () {
         if (glitchCounter > 0) fill(Math.random() * 100, 100, 100);
-        if (this.powerUp !== NONE) {
+        if (this.powerUp !== currentPower) {
             getColor(this.powerUp);
+            currentPower = this.powerUp;
         }
         ellipse(this.pos.x, this.pos.y, this.r * 2, this.r * 2);
     };
@@ -83,6 +101,8 @@ function getColor(x) {
         fill(72, 100, 100);
     } else if (x === GLITCH) {
         fill(48, 100, 100);
+    } else if (x === BIG) {
+        fill(0, 100, 100);
     } else {
         fill(66, 100, 100);
     }
@@ -90,9 +110,10 @@ function getColor(x) {
 
 function getPowerUp() {
     let rnd = Math.random();
-    if (rnd > 0.02) return NONE;
-    if (rnd > 0.015) return MAGNET;
+    if (rnd > 0.015) return NONE;
+    if (rnd > 0.01) return BIG;
     if (rnd > 0.005) return SPEED;
-    if (rnd > 0.002) return GLITCH;
-    return ZOOM;
+    if (rnd > 0.003) return MAGNET;
+    if (rnd > 0.0015) return ZOOM;
+    return GLITCH;
 }

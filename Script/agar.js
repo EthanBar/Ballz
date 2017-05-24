@@ -1,9 +1,22 @@
+const playerSpeed = 15;
+const magnetRange = 40;
+const magnetStrength = 15;
+const blobCount = 4000; // Count of pellets to pick up (These are locally rendered and created)
+const worldSize = 12000; // World size
+const blobSize = 20; // Count of pellets to pick up (These are locally rendered and created)
+const startingSize = 64; // Starting size of the player
+const worldBorder = worldSize + blobSize / 2; // World border
+const zoomScale = startingSize * 0.6;
+
 let player;
 let zoom = 10;
 let mycolor;
 let prepareFirebase = false;
 let players;
 let hitBorder = false;
+let listening = true;
+let lifetimePoints = 0;
+let lastScore = startingSize;
 
 let prevX = 0;
 let prevY = 0;
@@ -17,15 +30,6 @@ let highScores = {};
 let averageFPS = 0;
 let countFPS = 0;
 
-const playerSpeed = 15;
-const magnetRange = 40;
-const magnetStrength = 15;
-const blobCount = 2000; // Count of pellets to pick up (These are locally rendered and created)
-const worldSize = 12000; // World size
-const blobSize = 20; // Count of pellets to pick up (These are locally rendered and created)
-const startingSize = 64; // Starting size of the player
-const worldBorder = worldSize + blobSize / 2; // World border
-const zoomScale = startingSize * 0.6;
 
 let glitchCounter = 0;
 let speedCounter = 0;
@@ -69,7 +73,7 @@ function draw() {
     } else background(100);
     fill(0);
     textSize(32);
-    textAlign(LEFT);
+    textAlign(LEFT, BASELINE);
     text("Score: " + Math.floor(player.r), 10, 30);
     textAlign(RIGHT);
     text("v1.840", width, 30);
@@ -83,7 +87,8 @@ function draw() {
         }
     }
     textAlign(LEFT);
-    text(highScores[bestPlayer], 10, height - 5);
+    // text(highScores[bestPlayer], 10, height - 5);
+    text("Lifetime mass: " + lifetimePoints, 10, height - 5);
 
     // Display FPS
     countFPS += frameRate();
@@ -132,11 +137,8 @@ function draw() {
     blobs.sort(compare);
 
     fill(0);
-
     if (magnetCounter > 0) {
         for (let i = blobs.length - 1; i >= 0; i--) {
-            // if (player.pos.x - blobs[i].pos.x < player.r + 10) continue;
-            // if (player.pos.y - blobs[i].pos.y < player.r + 10) continue;
             if (player.pos.x - blobs[i].pos.x > player.r * 2 + magnetRange) continue;
             if (player.pos.y - blobs[i].pos.y > player.r * 2 + magnetRange) continue;
             let dist = p5.Vector.dist(player.pos, blobs[i].pos);
@@ -148,6 +150,18 @@ function draw() {
             }
         }
 
+    } else {
+        for (let i = blobs.length - 1; i >= 0; i--) {
+            if (player.pos.x - blobs[i].pos.x > player.r) continue;
+            if (player.pos.y - blobs[i].pos.y > player.r) continue;
+            let dist = p5.Vector.dist(player.pos, blobs[i].pos);
+            if (Math.abs(dist) < player.r) {
+                console.log("yee");
+                let d = createVector(player.pos.x - blobs[i].pos.x, player.pos.y - blobs[i].pos.y);
+                d.setMag(magnetStrength);
+                blobs[i].pos.add(d);
+            }
+        }
     }
 
     for (let i = blobs.length - 1; i >= 0; i--) {
@@ -155,10 +169,10 @@ function draw() {
             blobs.splice(i, 1);
             blobs[blobs.length] = new Blob(random(-worldSize, worldSize), random(-worldSize, worldSize), blobSize)
         } else {
+            currentPower = NONE;
             blobs[i].render();
         }
     }
-    // if (player.r < startingSize) player = startingSize;
 
     if (prepareFirebase) {
         if (prevX !== player.pos.x || prevY !== player.pos.y) {
@@ -190,11 +204,7 @@ function draw() {
                 if (otherUID === uid) {
                     // Check if dead
                     if (amKilled === 1) {
-                        player.r = startingSize;
-                        player.pos = createVector(random(-worldSize, worldSize), random(-worldSize, worldSize));
-                        database.ref('Users/' + uid).update({
-                            killed: 0
-                        });
+                        respawn();
                     }
                     continue;
                 }
@@ -211,8 +221,8 @@ function draw() {
                 // Display hover text
                 textSize(otherR / 2);
                 fill(0);
-                textAlign(CENTER);
-                text(otherDisplay.substr(0, otherDisplay.indexOf(" ")), otherX, otherY + otherR / 4);
+                textAlign(CENTER, CENTER);
+                text(otherDisplay.substr(0, otherDisplay.indexOf(" ")), otherX, otherY);
 
                 // Check collision
                 if (player.r > otherR) {
@@ -239,6 +249,23 @@ function draw() {
         recentlyEaten[key] -= 1;
     }
 
+    // User stats update
+    if (frameCount % 60 === 0) {
+        let totalPoints = 0;
+        firebase.database().ref('Stats/' + uid).once('value').then(function(snapshot) {
+            if (snapshot.val().totalPoints) {
+                totalPoints = snapshot.val().totalPoints;
+            }
+            let toAdd = player.r - lastScore;
+            if (lastScore < 0) toAdd = 0;
+            lifetimePoints = totalPoints += Math.ceil(toAdd);
+            database.ref('Stats/' + uid).update({
+                totalPoints: lifetimePoints
+            });
+            lastScore = player.r;
+        });
+    }
+
     // Var updates
     if (zoomCounter > 1) zoomCounter -= 0.1;
     speedCounter -= 0.1;
@@ -255,4 +282,12 @@ function compare(a,b) {
     if (a.powerUp < b.powerUp)
         return 1;
     return 0;
+}
+
+function respawn() {
+    player.r = startingSize;
+    player.pos = createVector(random(-worldSize, worldSize), random(-worldSize, worldSize));
+    database.ref('Users/' + uid).update({
+        killed: 0
+    });
 }

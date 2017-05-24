@@ -72,7 +72,6 @@ function init() {
     auth = firebase.auth();
     database = firebase.database();
     storage = firebase.storage();
-    // auth.onAuthStateChanged(authChange());
 }
 function logout() {
     database.ref("Users/" + uid).remove();
