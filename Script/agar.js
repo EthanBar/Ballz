@@ -1,5 +1,5 @@
 const playerSpeed = 15;
-const magnetRange = 40;
+const magnetRange = 300;
 const magnetStrength = 15;
 const blobCount = 4000; // Count of pellets to pick up (These are locally rendered and created)
 const worldSize = 12000; // World size
@@ -36,7 +36,6 @@ let speedCounter = 0;
 let zoomCounter = 1;
 let magnetCounter = 0;
 
-
 function setup() {
     createCanvas(window.innerWidth,  window.innerHeight - document.getElementById('topbar').offsetHeight);
     colorMode(HSB, 100);
@@ -48,6 +47,9 @@ function setup() {
     strokeCap(SQUARE);
     stroke(0);
 }
+
+
+
 function draw() {
     if (!logedin) return;
     if (!prepareFirebase && logedin) {
@@ -66,46 +68,17 @@ function draw() {
         prepareFirebase = true;
     }
 
-
-    /* Render HUD */
-    if (glitchCounter > 0) {
-        background(Math.random() * 100, 100, 100);
-    } else background(100);
-    fill(0);
-    textSize(32);
-    textAlign(LEFT, BASELINE);
-    text("Score: " + Math.floor(player.r), 10, 30);
-    textAlign(RIGHT);
-    text("v1.840", width, 30);
-
-    //Display leader board
-    highScores[uid] = Math.floor(player.r);
-    let bestPlayer = uid;
-    for (let key in highScores) {
-        if (highScores[key] > highScores[bestPlayer]) {
-            bestPlayer = key;
-        }
-    }
-    textAlign(LEFT);
-    // text(highScores[bestPlayer], 10, height - 5);
-    text("Lifetime mass: " + lifetimePoints, 10, height - 5);
-
-    // Display FPS
-    countFPS += frameRate();
-    if (frameCount % 60 === 0){
-        averageFPS = countFPS / 60;
-        countFPS = 0;
-    }
-    textAlign(RIGHT);
-    text("FPS: " + Math.round(averageFPS), width - 5, height - 5);
+    displayHud();
 
     // Prepare view
     translate(width/2, height/2); // Center view
     let newzoom = zoomScale / ((player.r - startingSize) / 2 + startingSize);
     newzoom /= zoomCounter;
     if (glitchCounter > 0) {
-        newzoom *= Math.random() + 0.5;
-        zoom = newzoom;
+        newzoom *= (Math.random() * 0.5) + 0.25;
+        // rotate(Math.random() * 10);
+        // zoom = newzoom;
+        zoom = lerp(zoom, newzoom, 0.1);
     } else {
         zoom = lerp(zoom, newzoom, 0.1);
     }
@@ -139,10 +112,10 @@ function draw() {
     fill(0);
     if (magnetCounter > 0) {
         for (let i = blobs.length - 1; i >= 0; i--) {
-            if (player.pos.x - blobs[i].pos.x > player.r * 2 + magnetRange) continue;
-            if (player.pos.y - blobs[i].pos.y > player.r * 2 + magnetRange) continue;
+            if (player.pos.x - blobs[i].pos.x > player.r + magnetRange) continue;
+            if (player.pos.y - blobs[i].pos.y > player.r + magnetRange) continue;
             let dist = p5.Vector.dist(player.pos, blobs[i].pos);
-            if (Math.abs(dist) < player.r * 2 + magnetRange) {
+            if (Math.abs(dist) < player.r + magnetRange) {
                 console.log("yee");
                 let d = createVector(player.pos.x - blobs[i].pos.x, player.pos.y - blobs[i].pos.y);
                 d.setMag(magnetStrength);
@@ -151,17 +124,17 @@ function draw() {
         }
 
     } else {
-        for (let i = blobs.length - 1; i >= 0; i--) {
-            if (player.pos.x - blobs[i].pos.x > player.r) continue;
-            if (player.pos.y - blobs[i].pos.y > player.r) continue;
-            let dist = p5.Vector.dist(player.pos, blobs[i].pos);
-            if (Math.abs(dist) < player.r) {
-                console.log("yee");
-                let d = createVector(player.pos.x - blobs[i].pos.x, player.pos.y - blobs[i].pos.y);
-                d.setMag(magnetStrength);
-                blobs[i].pos.add(d);
-            }
-        }
+        // for (let i = blobs.length - 1; i >= 0; i--) {
+        //     if (player.pos.x - blobs[i].pos.x > player.r) continue;
+        //     if (player.pos.y - blobs[i].pos.y > player.r) continue;
+        //     let dist = p5.Vector.dist(player.pos, blobs[i].pos);
+        //     if (Math.abs(dist) < player.r) {
+        //         console.log("yee");
+        //         let d = createVector(player.pos.x - blobs[i].pos.x, player.pos.y - blobs[i].pos.y);
+        //         d.setMag(magnetStrength);
+        //         blobs[i].pos.add(d);
+        //     }
+        // }
     }
 
     for (let i = blobs.length - 1; i >= 0; i--) {
@@ -212,7 +185,9 @@ function draw() {
                 if (!(otherUID in colorMap)) {
                     colorMap[otherUID] = random(100);
                 }
-                fill(colorMap[otherUID], 100, 100);
+                if (glitchCounter > 0) {
+                    fill(Math.random() * 100, 100);
+                } xfill(colorMap[otherUID], 100, 100);
                 ellipse(otherX, otherY, otherR * 2);
 
                 // Update high scores
@@ -270,10 +245,75 @@ function draw() {
     if (zoomCounter > 1) zoomCounter -= 0.1;
     speedCounter -= 0.1;
     magnetCounter -= 0.1;
+    if (glitchCounter > 0) rotate(0);
     glitchCounter -= 0.1;
     prevX = player.pos.x;
     prevY = player.pos.y;
     prevR = player.r;
+}
+
+
+/* Render HUD */
+function displayHud() {
+    if (glitchCounter > 0) {
+        background(Math.random() * 100, 100, 100);
+        fill(0);
+        textSize(32);
+        textAlign(LEFT, BASELINE);
+        text(("Score: " + Math.floor(player.r)).split('').sort(function(){return 0.5-Math.random()}).join(''), 10, 30);
+        textAlign(RIGHT);
+        text("v2.0".split('').sort(function(){return 0.5-Math.random()}).join(''), width, 30);
+
+        //Display leader board
+        highScores[uid] = Math.floor(player.r);
+        let bestPlayer = uid;
+        for (let key in highScores) {
+            if (highScores[key] > highScores[bestPlayer]) {
+                bestPlayer = key;
+            }
+        }
+        textAlign(LEFT);
+        // text(highScores[bestPlayer], 10, height - 5);
+        text(("Lifetime mass: " + lifetimePoints).split('').sort(function(){return 0.5-Math.random()}).join(''), 10, height - 5);
+
+        // Display FPS
+        countFPS += frameRate();
+        if (frameCount % 60 === 0) {
+            averageFPS = countFPS / 60;
+            countFPS = 0;
+        }
+        textAlign(RIGHT);
+        text(("FPS: " + Math.round(averageFPS)).split('').sort(function(){return 0.5-Math.random()}).join(''), width - 5, height - 5);
+    } else {
+        background(100);
+        fill(0);
+        textSize(32);
+        textAlign(LEFT, BASELINE);
+        text("Score: " + Math.floor(player.r), 10, 30);
+        textAlign(RIGHT);
+        text("v2.0", width, 30);
+
+        //Display leader board
+        highScores[uid] = Math.floor(player.r);
+        let bestPlayer = uid;
+        for (let key in highScores) {
+            if (highScores[key] > highScores[bestPlayer]) {
+                bestPlayer = key;
+            }
+        }
+        textAlign(LEFT);
+        // text(highScores[bestPlayer], 10, height - 5);
+        text("Alltime mass: " + lifetimePoints, 10, height - 5);
+
+        // Display FPS
+        countFPS += frameRate();
+        if (frameCount % 60 === 0) {
+            averageFPS = countFPS / 60;
+            countFPS = 0;
+        }
+        textAlign(RIGHT);
+        text("FPS: " + Math.round(averageFPS), width - 5, height - 5);
+    }
 }
 
 function compare(a,b) {
@@ -291,3 +331,7 @@ function respawn() {
         killed: 0
     });
 }
+
+window.onresize = function () {
+    resizeCanvas(window.innerWidth,  window.innerHeight - document.getElementById('topbar').offsetHeight);
+};

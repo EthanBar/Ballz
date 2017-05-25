@@ -54,9 +54,9 @@ function Blob(x, y, r) {
         let d = p5.Vector.dist(this.pos, other.pos);
         if (Math.abs(d) < radiusTotal) {
             // this.r += other.r;
-            if (other.powerUp === SPEED) speedCounter = 10;
+            if (other.powerUp === SPEED) speedCounter = 12;
             if (other.powerUp === ZOOM) zoomCounter = 8;
-            if (other.powerUp === MAGNET) magnetCounter = 100;
+            if (other.powerUp === MAGNET) magnetCounter = 50;
             if (other.powerUp === GLITCH) glitchCounter = 8;
             if (other.powerUp === BIG) {
                 let sum = (PI * this.r * this.r) + (PI * other.r * other.r) * 20;
@@ -74,14 +74,18 @@ function Blob(x, y, r) {
         if (player.r < 0) respawn(); // Respawn if mass less than 0
 
         // Display player
-        fill(mycolor, 100, 100);
+        if (glitchCounter > 0) {
+            fill(Math.random() * 100, 100);
+        } else fill(mycolor, 100, 100);
         ellipse(this.pos.x, this.pos.y, this.r * 2, this.r * 2);
 
         // Display hover text
         textSize(this.r / 2);
         fill(0);
         textAlign(CENTER, CENTER);
-        text(username.substr(0, username.indexOf(" ")), this.pos.x, this.pos.y);
+        if (glitchCounter > 0 ) {
+            text((username.substr(0, username.indexOf(" "))).split('').sort(function(){return 0.5-Math.random()}).join(''), this.pos.x, this.pos.y);
+        } else text(username.substr(0, username.indexOf(" ")), this.pos.x, this.pos.y);
     };
 
     this.render = function () {
@@ -108,7 +112,7 @@ function getColor(x) {
     }
 }
 
-function getPowerUp() {
+function getPowerUp() { // OPT: Clear
     let rnd = Math.random();
     if (rnd > 0.015) return NONE;
     if (rnd > 0.01) return BIG;
