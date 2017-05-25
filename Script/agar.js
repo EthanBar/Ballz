@@ -1,7 +1,7 @@
 const playerSpeed = 15;
 const magnetRange = 300;
 const magnetStrength = 15;
-const blobCount = 4000; // Count of pellets to pick up (These are locally rendered and created)
+const blobCount = 9000; // Count of pellets to pick up (These are locally rendered and created)
 const worldSize = 12000; // World size
 const blobSize = 20; // Count of pellets to pick up (These are locally rendered and created)
 const startingSize = 64; // Starting size of the player
