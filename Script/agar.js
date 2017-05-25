@@ -1,8 +1,8 @@
 const playerSpeed = 15;
 const magnetRange = 300;
 const magnetStrength = 15;
-const blobCount = 8000; // Count of pellets to pick up (These are locally rendered and created)
-const worldSize = 20000; // World size
+const blobCount = 4000; // Count of pellets to pick up (These are locally rendered and created)
+const worldSize = 12000; // World size
 const blobSize = 20; // Count of pellets to pick up (These are locally rendered and created)
 const startingSize = 64; // Starting size of the player
 const worldBorder = worldSize + blobSize / 2; // World border
@@ -261,7 +261,7 @@ function displayHud() {
         textAlign(LEFT, BASELINE);
         text(("Score: " + Math.floor(player.r)).split('').sort(function(){return 0.5-Math.random()}).join(''), 10, 30);
         textAlign(RIGHT);
-        text("HELP".split('').sort(function(){return 0.5-Math.random()}).join(''), width, 30);
+        text("Less lag?".split('').sort(function(){return 0.5-Math.random()}).join(''), width, 30);
 
         //Display leader board
         highScores[uid] = Math.floor(player.r);
@@ -290,7 +290,7 @@ function displayHud() {
         textAlign(LEFT, BASELINE);
         text("Score: " + Math.floor(player.r), 10, 30);
         textAlign(RIGHT);
-        text("Plz don't break server", width, 30);
+        text("Less lag?", width, 30);
 
         //Display leader board
         highScores[uid] = Math.floor(player.r);
