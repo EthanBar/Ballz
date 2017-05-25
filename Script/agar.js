@@ -1,8 +1,8 @@
 const playerSpeed = 15;
 const magnetRange = 300;
 const magnetStrength = 15;
-const blobCount = 4000; // Count of pellets to pick up (These are locally rendered and created)
-const worldSize = 12000; // World size
+const blobCount = 8000; // Count of pellets to pick up (These are locally rendered and created)
+const worldSize = 20000; // World size
 const blobSize = 20; // Count of pellets to pick up (These are locally rendered and created)
 const startingSize = 64; // Starting size of the player
 const worldBorder = worldSize + blobSize / 2; // World border
@@ -116,7 +116,6 @@ function draw() {
             if (player.pos.y - blobs[i].pos.y > player.r + magnetRange) continue;
             let dist = p5.Vector.dist(player.pos, blobs[i].pos);
             if (Math.abs(dist) < player.r + magnetRange) {
-                console.log("yee");
                 let d = createVector(player.pos.x - blobs[i].pos.x, player.pos.y - blobs[i].pos.y);
                 d.setMag(magnetStrength);
                 blobs[i].pos.add(d);
@@ -225,21 +224,21 @@ function draw() {
     }
 
     // User stats update
-    if (frameCount % 60 === 0) {
-        let totalPoints = 0;
-        firebase.database().ref('Stats/' + uid).once('value').then(function(snapshot) {
-            if (snapshot.val().totalPoints) {
-                totalPoints = snapshot.val().totalPoints;
-            }
-            let toAdd = player.r - lastScore;
-            if (lastScore < 0) toAdd = 0;
-            lifetimePoints = totalPoints += Math.ceil(toAdd);
-            database.ref('Stats/' + uid).update({
-                totalPoints: lifetimePoints
-            });
-            lastScore = player.r;
-        });
-    }
+    // if (frameCount % 60 === 0) {
+    //     let totalPoints = 0;
+    //     firebase.database().ref('Stats/' + uid).once('value').then(function(snapshot) {
+    //         if (snapshot.val().totalPoints) {
+    //             totalPoints = snapshot.val().totalPoints;
+    //         }
+    //         let toAdd = player.r - lastScore;
+    //         if (lastScore < 0) toAdd = 0;
+    //         lifetimePoints = totalPoints += Math.ceil(toAdd);
+    //         database.ref('Stats/' + uid).update({
+    //             totalPoints: lifetimePoints
+    //         });
+    //         lastScore = player.r;
+    //     });
+    // }
 
     // Var updates
     if (zoomCounter > 1) zoomCounter -= 0.1;
@@ -262,7 +261,7 @@ function displayHud() {
         textAlign(LEFT, BASELINE);
         text(("Score: " + Math.floor(player.r)).split('').sort(function(){return 0.5-Math.random()}).join(''), 10, 30);
         textAlign(RIGHT);
-        text("v2.1".split('').sort(function(){return 0.5-Math.random()}).join(''), width, 30);
+        text("HELP".split('').sort(function(){return 0.5-Math.random()}).join(''), width, 30);
 
         //Display leader board
         highScores[uid] = Math.floor(player.r);
@@ -272,9 +271,9 @@ function displayHud() {
                 bestPlayer = key;
             }
         }
-        textAlign(LEFT);
+        // textAlign(LEFT);
         // text(highScores[bestPlayer], 10, height - 5);
-        text(("Lifetime mass: " + lifetimePoints).split('').sort(function(){return 0.5-Math.random()}).join(''), 10, height - 5);
+        // text(("Lifetime mass: " + lifetimePoints).split('').sort(function(){return 0.5-Math.random()}).join(''), 10, height - 5);
 
         // Display FPS
         countFPS += frameRate();
@@ -291,7 +290,7 @@ function displayHud() {
         textAlign(LEFT, BASELINE);
         text("Score: " + Math.floor(player.r), 10, 30);
         textAlign(RIGHT);
-        text("v2.1", width, 30);
+        text("Plz don't break server", width, 30);
 
         //Display leader board
         highScores[uid] = Math.floor(player.r);
@@ -301,9 +300,9 @@ function displayHud() {
                 bestPlayer = key;
             }
         }
-        textAlign(LEFT);
+        // textAlign(LEFT);
         // text(highScores[bestPlayer], 10, height - 5);
-        text("Alltime mass: " + lifetimePoints, 10, height - 5);
+        // text("Alltime mass: " + lifetimePoints, 10, height - 5);
 
         // Display FPS
         countFPS += frameRate();
