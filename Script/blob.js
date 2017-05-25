@@ -118,6 +118,6 @@ function getPowerUp() { // OPT: Clear
     if (rnd > 0.01) return BIG;
     if (rnd > 0.005) return SPEED;
     if (rnd > 0.003) return MAGNET;
-    if (rnd > 0.0015) return ZOOM;
+    if (rnd > 0.0001) return ZOOM;
     return GLITCH;
 }

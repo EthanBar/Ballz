@@ -262,7 +262,7 @@ function displayHud() {
         textAlign(LEFT, BASELINE);
         text(("Score: " + Math.floor(player.r)).split('').sort(function(){return 0.5-Math.random()}).join(''), 10, 30);
         textAlign(RIGHT);
-        text("v2.0".split('').sort(function(){return 0.5-Math.random()}).join(''), width, 30);
+        text("v2.1".split('').sort(function(){return 0.5-Math.random()}).join(''), width, 30);
 
         //Display leader board
         highScores[uid] = Math.floor(player.r);
@@ -291,7 +291,7 @@ function displayHud() {
         textAlign(LEFT, BASELINE);
         text("Score: " + Math.floor(player.r), 10, 30);
         textAlign(RIGHT);
-        text("v2.0", width, 30);
+        text("v2.1", width, 30);
 
         //Display leader board
         highScores[uid] = Math.floor(player.r);
