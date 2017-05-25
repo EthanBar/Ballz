@@ -18,7 +18,7 @@ function Blob(x, y, r) {
         let speedMulti = 1;
         if (speedCounter > 0) speedMulti = 2;
         if (newvel.mag() < zoomScale) {
-            newvel.setMag(0);
+            newvel.setMag(1);
         } else {
             newvel.setMag(Math.max(playerSpeed * 2 - player.r * 0.03, playerSpeed) * speedMulti);
         }

@@ -187,7 +187,7 @@ function draw() {
                 }
                 if (glitchCounter > 0) {
                     fill(Math.random() * 100, 100);
-                } xfill(colorMap[otherUID], 100, 100);
+                } fill(colorMap[otherUID], 100, 100);
                 ellipse(otherX, otherY, otherR * 2);
 
                 // Update high scores
