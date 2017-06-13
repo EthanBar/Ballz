@@ -1,6 +1,6 @@
 # Firebase based agar.io copy
 
-Play [over here!](ethanbar.github.io/Ballz/)
+Play [over here!](https://ethanbar.github.io/Ballz/)
 Game is made from multiple players
 Please spare the free data cap
 
