@@ -114,7 +114,7 @@ function getColor(x) {
 
 function getPowerUp() { // OPT: Clear
     let rnd = Math.random();
-    if (rnd > 0.015) return GLITCH;
+    if (rnd > 0.015) return NONE;
     if (rnd > 0.01) return BIG;
     if (rnd > 0.005) return SPEED;
     if (rnd > 0.003) return MAGNET;
