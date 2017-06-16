@@ -18,7 +18,7 @@ function Blob(x, y, r) {
         let speedMulti = 1;
         if (speedCounter > 0) speedMulti = 2;
         if (newvel.mag() < zoomScale) {
-            newvel.setMag(1);
+            newvel.setMag(0);
         } else {
             newvel.setMag(Math.max(playerSpeed * 2 - player.r * 0.03, playerSpeed) * speedMulti);
         }
@@ -114,7 +114,7 @@ function getColor(x) {
 
 function getPowerUp() { // OPT: Clear
     let rnd = Math.random();
-    if (rnd > 0.015) return NONE;
+    if (rnd > 0.015) return GLITCH;
     if (rnd > 0.01) return BIG;
     if (rnd > 0.005) return SPEED;
     if (rnd > 0.003) return MAGNET;

@@ -9,6 +9,7 @@ const worldBorder = worldSize + blobSize / 2; // World border
 const zoomScale = startingSize * 0.6;
 
 let player;
+let mainTree;
 let zoom = 10;
 let mycolor;
 let prepareFirebase = false;
@@ -61,10 +62,10 @@ function draw() {
             size: Math.round(player.r),
             killed: 0
         });
-        let commentsRef = firebase.database().ref('Users');
-        commentsRef.on('value', function(data) {
-            players = data.val();
-        });
+        mainTree = firebase.database().ref('Users');
+        // mainTree.on('value', function(data) {
+        //     players = data.val();
+        // });
         prepareFirebase = true;
     }
 
@@ -147,19 +148,24 @@ function draw() {
     }
 
     if (prepareFirebase) {
-        if (prevX !== player.pos.x || prevY !== player.pos.y) {
-            if (prevR === player.r) {
-                database.ref('Users/' + uid).update({
-                    x: Math.round(player.pos.x),
-                    y: Math.round(player.pos.y)
-                });
-            } else {
-                database.ref('Users/' + uid).update({
-                    x: Math.round(player.pos.x),
-                    y: Math.round(player.pos.y),
-                    size: Math.round(player.r)
-                });
+        if (frameCount % 10 === 0) {
+            if (prevX !== player.pos.x || prevY !== player.pos.y) {
+                if (prevR === player.r) {
+                    database.ref('Users/' + uid).update({
+                        x: Math.round(player.pos.x),
+                        y: Math.round(player.pos.y)
+                    });
+                } else {
+                    database.ref('Users/' + uid).update({
+                        x: Math.round(player.pos.x),
+                        y: Math.round(player.pos.y),
+                        size: Math.round(player.r)
+                    });
+                }
             }
+            mainTree.once('value').then(function(snapshot) {
+                players = snapshot.val();
+            });
         }
         if (players) {
             for (let key in players) {
