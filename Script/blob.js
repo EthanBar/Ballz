@@ -116,8 +116,8 @@ function getPowerUp() { // OPT: Clear
     let rnd = Math.random();
     if (rnd > 0.015) return NONE;
     if (rnd > 0.01) return BIG;
-    if (rnd > 0.005) return SPEED;
-    if (rnd > 0.003) return MAGNET;
-    if (rnd > 0.0001) return ZOOM;
+    if (rnd > 0.006) return SPEED;
+    if (rnd > 0.004) return MAGNET;
+    if (rnd > 0.002) return ZOOM;
     return GLITCH;
 }

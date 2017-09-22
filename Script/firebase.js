@@ -1,14 +1,16 @@
 "use strict";
 
-const config = {
-    apiKey: "AIzaSyAD6rxrGfFQmImBrP2JnxCRE3l5k8SjpNA",
-    authDomain: "bounce-72a28.firebaseapp.com",
-    databaseURL: "https://bounce-72a28.firebaseio.com",
-    projectId: "bounce-72a28",
-    storageBucket: "bounce-72a28.appspot.com",
-    messagingSenderId: "69347143131"
+// Initialize Firebase
+let config = {
+    apiKey: "AIzaSyA6Xf9_2nFI13u9kSn-yvgWBihN16-t-2k",
+    authDomain: "ajar-16584.firebaseapp.com",
+    databaseURL: "https://ajar-16584.firebaseio.com",
+    projectId: "ajar-16584",
+    storageBucket: "ajar-16584.appspot.com",
+    messagingSenderId: "912516933839"
 };
 firebase.initializeApp(config);
+
 let auth, database, storage, user, token;
 let username, email, photoUrl, uid, emailVerified;
 let logedin = false;
@@ -26,6 +28,7 @@ $(document).ready(function () {
         logout();
     });
 });
+
 firebase.auth().onAuthStateChanged(function(user) {
     if (user) {
         updateLogin();
